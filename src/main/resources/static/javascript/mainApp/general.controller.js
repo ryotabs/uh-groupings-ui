@@ -314,16 +314,24 @@
                 }, $scope.description);
                 $scope.descriptionForm = !($scope.descriptionForm);
 
-            };
+        /**
+         * Adds a user to a group.
+         * @param {string} list - the list the user is being added to (either Include or Exclude)
+         */
+        $scope.addMember = function (list) {
+            const userToAdd = $scope.userToAdd;
 
+            if (_.isEmpty(userToAdd)) {
+                $scope.createAddErrorModal(userToAdd);
+            } else if ($scope.existInList(userToAdd, list)) {
+                $scope.createCheckModal(userToAdd, list, false);
+            } else if ($scope.isInAnotherList(userToAdd, list)) {
+              $scope.createCheckModal(userToAdd, list, true);
+            } else {
+                $scope.createConfirmAddModal({
+                    userToAdd: userToAdd,
+                    listName: list
 
-            /**
-             * Creates a modal for errors in loading data from the API.
-             */
-            $scope.createApiErrorModal = function () {
-                $scope.apiErrorModalInstance = $uibModal.open({
-                    templateUrl: "modal/apiError",
-                    scope: $scope
                 });
             };
 
@@ -531,38 +539,36 @@
                     $scope.updateAddMembers(options.usersToAdd, options.listName);
                 });
 
-            };
-            /**
-             * Creates a modal that asks for confirmation when adding a user.
-             * @param {object} options - the options object
-             * @param {string} options.userToAdd - the user to add
-             * @param {string} options.listName - name of the list being added to
-             */
-            $scope.createConfirmAddModal = function (options) {
-                const userToAdd = options.userToAdd;
+      /**
+       * Creates checkAddModal.
+       */
+      $scope.createCheckAddModal = function (user, userToAdd, listName) {
 
-                groupingsService.getMemberAttributes(userToAdd, function (attributes) {
-                    $scope.nameToAdd = attributes.cn;
-                    $scope.uhuuidToAdd = attributes.uhuuid;
-                    $scope.uidToAdd = attributes.uid;
+          $scope.user = user;
+        $scope.userToAdd = userToAdd;
+          $scope.listName = listName;
 
-                    $scope.listName = options.listName;
+        $scope.checkAddModalInstance = $uibModal.open({
+          templateUrl: "modal/checkAddModal",
+          scope: $scope
+        });
+        $scope.checkAddModalInstance.result.then(function () {
+          $scope.user = userToAdd;
+        });
+      }, function(userToAdd, listName){
+        if ($scope.userToAdd === listName) {
+          $scope.createCheckAddModal();
+        } else {
+          $scope.updateAddMember(userToAdd, options.listName);
+        }
+      };
 
-                    // Ask for confirmation from the user to add the member
-                    $scope.confirmAddModalInstance = $uibModal.open({
-                        templateUrl: "modal/confirmAddModal",
-                        scope: $scope
-                    });
-
-                    $scope.confirmAddModalInstance.result.then(function () {
-                        $scope.updateAddMember(userToAdd, options.listName);
-                    });
-                }, function (res) {
-                    if (res.statusCode === 404) {
-                        $scope.createAddErrorModal(userToAdd);
-                    }
-                });
-            };
+        /**
+         * Closes CheckModal and proceeds with the checkModalInstance result.then function
+         */
+        $scope.proceedCheckModal = function () {
+            $scope.checkModalInstance.close();
+        };
 
             /**
              * Closes CheckModal and proceeds with the checkModalInstance result.then function
@@ -641,12 +647,21 @@
                 });
             };
 
-            /**
-             * Closes the add user modal.
-             */
-            $scope.closeSuccessfulAddModal = function () {
-                $scope.addModalInstance.close();
-            };
+          /**
+         * Removes a user from the include or exclude group.
+         * @param {string} listName - the list to remove the user from (either Include or Exclude)
+         * @param {number} currentPage - the current page in the table
+         * @param {number} index - the index of the user clicked by the user
+         * account
+         */
+        $scope.removeMember = function (listName, currentPage, index) {
+            let userToRemove;
+            if (listName === "Include") {
+                userToRemove = $scope.pagedItemsInclude[currentPage][index];
+            } else if (listName === "Exclude") {
+                userToRemove = $scope.pagedItemsExclude[currentPage][index];
+            }
+
 
             $scope.createAddErrorModal = function (userAdded) {
                 $scope.user = userAdded;
@@ -1203,5 +1218,4 @@
 
         }
 
-        UHGroupingsApp.controller("GeneralJsController", GeneralJsController);
-    })();
+})();

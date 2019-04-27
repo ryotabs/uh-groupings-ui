@@ -58,22 +58,20 @@
          * Adds a user to the admin list.
          */
         $scope.addAdmin = function () {
-            groupingsService.getAdminLists(function () {
-                const adminToAdd = $scope.adminToAdd;
 
-                if (_.isEmpty(adminToAdd)) {
-                    $scope.createAddErrorModal(adminToAdd);
-                } else {
-                    $scope.createConfirmAddModal({
-                        userToAdd: adminToAdd,
-                        listName: "admins"
-                    });
-                }
-            }, function (res) {
-                if (res.statusCode === 403) {
-                    $scope.createRoleErrorModal();
-                }
-            });
+            const adminToAdd = $scope.adminToAdd;
+            const list = $scope.adminsList;
+            if (_.isEmpty(adminToAdd)) {
+              $scope.createAddErrorModal(adminToAdd);
+            } else if (adminToAdd === list) {
+              $scope.createCheckAddModal({
+              })
+            } else {
+                $scope.createConfirmAddModal({
+                    userToAdd: adminToAdd,
+                    listName: "admins"
+                });
+            }
         };
 
         /**
