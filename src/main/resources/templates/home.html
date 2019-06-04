@@ -2,9 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
-<head th:replace="header :: copy(headingTitle='UH Groupings Home')">
-<body>
+<head th:replace="header :: copy(headingTitle='UH Groupings Home')"></head>
+<body ng-app="UHGroupingsApp">
 <nav th:replace="menubar :: copy"></nav>
+<div class="container">
 <div class="seafoam-bg pt-5 pb-5">
     <div class="container">
         <div class="row">
@@ -15,8 +16,9 @@
                 </div>
             </div>
             <div class="col-sm-9 col-md-10">
-                <h1 class="h3 text-center text-md-left">Welcome, username!</h1>
-                <p class="lead text-center text-md-left"><span class="name">Your Full Name</span>, <em class="role">Administrator</em></p>
+                <h1 class="h3 text-center text-md-left">Welcome, <span
+                        sec:authentication="principal.name" id="username"></span>!</h1>
+                <p class="lead text-center text-md-left"> <em class="role">Administrator</em></p>
             </div>
         </div>
     </div>
@@ -26,7 +28,7 @@
         <div class="col-md-4 mb-5 mb-md-0">
             <div class="dashboard-item-icon text-primary mb-3">
                 <i class="fa fa-key fa-3x mr-4" aria-hidden="true"></i>
-                <span class="h1">11</span>
+                <!--<div><span class="h1">11 ({{groupingExclude.length}}) </span></div>-->
             </div>
             <div class="dashboard-item-content">
                 <h2 class="h4">Administration</h2>
@@ -34,24 +36,40 @@
                 <a class="btn dark-teal-bg" href="/uhgroupings/admin">Admin</a>
             </div>
         </div>
-        <div class="col-md-4 mb-5 mb-md-0">
+        <!--<div class="col-md-4 mb-5 mb-md-0">
             <div class="dashboard-item-icon text-primary mb-3">
                 <i class="fa fa-wrench fa-3x mr-3" aria-hidden="true"></i>
                 <span class="h1">4</span>
             </div>
             <div class="dashboard-item-content">
                 <h2 class="h4">Groupings</h2>
+                <p>View and manage my memberships. Search for new groupings to join as a member.</p>-->
+        <div class="col-md-4" ng-controller="MembershipJsController" data-ng-init="init()">
+            <div class="dashboard-item-icon text-primary mb-3">
+                <i class="fa fa-id-card fa-3x mr-4" aria-hidden="true"></i>
+                <span class="h1">{{membershipsList.length}}</span>
+            </div>
+            <div class="dashboard-item-content">
+                <h2 class="h4">Memberships</h2>
                 <p>View and manage my memberships. Search for new groupings to join as a member.</p>
                 <a class="btn dark-teal-bg" href="/uhgroupings/memberships">Memberships</a>
             </div>
         </div>
-        <div class="col-md-4">
+<!--        <div class="col-md-4">
             <div class="dashboard-item-icon text-primary mb-3">
                 <i class="fa fa-id-card fa-3x mr-4" aria-hidden="true"></i>
                 <span class="h1">21</span>
             </div>
             <div class="dashboard-item-content">
                 <h2 class="h4">Members</h2>
+                <p>View and manage groupings I own. Manage members, configure grouping options and sync destinations.</p>-->
+        <div class="col-md-4 mb-5 mb-md-0" ng-controller="OwnerJsController" data-ng-init="init()">
+            <div class="dashboard-item-icon text-primary mb-3">
+                <i class="fa fa-wrench fa-3x mr-3" aria-hidden="true"></i>
+                <span class="h1">{{groupingsList.length}}</span>
+            </div>
+            <div class="dashboard-item-content">
+                <h2 class="h4">Groupings</h2>
                 <p>View and manage groupings I own. Manage members, configure grouping options and sync destinations.</p>
                 <a class="btn dark-teal-bg" href="/uhgroupings/groupings">Groupings</a>
             </div>
@@ -120,6 +138,7 @@
     </div>
 
 </div>-->
+</div>
 <!-- / Content container. -->
 
 <div th:replace="footer :: copy"></div>
