@@ -31,7 +31,7 @@
 
         <lodash-version>4.17.20</lodash-version>
         <kotlin.version>1.3.21</kotlin.version>
-        <spring.version>5.2.3.RELEASE</spring.version>
+        <spring.version>5.3.32</spring.version>
     </properties>
 
     <pluginRepositories>
@@ -268,7 +268,7 @@
                 <version>3.0-beta-02</version>
                 <configuration>
                     <preloadSources>
-                        <source>classpath/META-INF/resources/webjars/angularjs/${angularjs-version}/angular.min.js"></source>
+                        <source>classpath/META-INF/resources/webjars/angularjs/${angularjs-version}/angular.min.js"&gt;</source>
                         <source>classpath/META-INF/resources/webjars/jquery/${jquery-version}/jquery.min.js</source>
                         <source>classpath/META-INF/resources/webjars/bootstrap/${bootstrap-version}/js/bootstrap.min.js</source>
                         <source>classpath/META-INF/resources/webjars/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap.min.js</source>
